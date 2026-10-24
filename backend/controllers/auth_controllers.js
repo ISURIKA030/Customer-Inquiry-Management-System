@@ -1,7 +1,7 @@
 
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { findStaffByEmail } from "../models/staffModel.js";
+import { findStaffByEmail } from "../models/staff_model.js";
 
 export async function login(req, res) {
   try {
