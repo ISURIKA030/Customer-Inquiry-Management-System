@@ -2,6 +2,7 @@
 import {
   createInquiry,
   getAllInquiries,
+  updateInquiryStatus,
 } from "../models/inquiry_models.js";
 
 const allowedContactMethods = [
@@ -63,6 +64,46 @@ export async function createInquiryHandler(req, res) {
   }
 }
 
+
+export async function updateInquiryStatusHandler(req, res) {
+  try {
+    const id = req.params.id;
+    const { status } = req.body;
+
+    if (!/^[1-9]\d*$/.test(id)) {
+      return res.status(400).json({
+        message: "Invalid inquiry ID.",
+      });
+    }
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        message: "Invalid inquiry status.",
+      });
+    }
+
+    const inquiry = await updateInquiryStatus(id, status);
+
+    if (!inquiry) {
+      return res.status(404).json({
+        message: "Inquiry not found.",
+      });
+    }
+
+    return res.json({
+      message: "Inquiry status updated successfully.",
+      inquiry,
+    });
+  } catch (error) {
+    console.error("Update inquiry status error:", error.message);
+
+    return res.status(500).json({
+      message: "Unable to update inquiry status.",
+    });
+  }
+}
+
+
 export async function listInquiriesHandler(req, res) {
   try {
     const { search = "", status = "" } = req.query;
@@ -87,5 +128,7 @@ export async function listInquiriesHandler(req, res) {
     return res.status(500).json({
       message: "Unable to retrieve inquiries.",
     });
+
+    
   }
 }
