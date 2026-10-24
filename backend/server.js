@@ -1,11 +1,14 @@
 
 import express from "express";
 import pool from "./db.js";
+import "dotenv/config";
+import auth_routes from "./routes/auth_routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
+app.use("/api/auth", auth_routes);
 
 app.get("/api/health", (req, res) => {
   res.json({
