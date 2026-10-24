@@ -2,7 +2,7 @@
 import {
   createInquiry,
   getAllInquiries,
-} from "../models/inquiry_model.js";
+} from "../models/inquiry_models.js";
 
 const allowedContactMethods = [
   "Telephone",

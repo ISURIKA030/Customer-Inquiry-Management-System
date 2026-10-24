@@ -62,5 +62,22 @@ export async function getAllInquiries(filters = {}) {
     values
   );
 
+  
+
+
   return result.rows;
+}
+
+
+export async function updateInquiryStatus(id, status) {
+  const result = await pool.query(
+    `UPDATE inquiries
+     SET status = $1,
+         updated_at = NOW()
+     WHERE id = $2
+     RETURNING *`,
+    [status, id]
+  );
+
+  return result.rows[0] || null;
 }
