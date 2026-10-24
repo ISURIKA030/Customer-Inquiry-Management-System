@@ -26,7 +26,7 @@ app.get("/api/db-check", async (req, res) => {
       database: result.rows[0].database,
     });
   } catch (error) {
-    console.error("Database connection failed:", error.message);
+    console.error("Database connection failed:", error);
 
     res.status(500).json({
       status: "ERROR",
