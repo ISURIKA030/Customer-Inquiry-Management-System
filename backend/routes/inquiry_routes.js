@@ -13,6 +13,6 @@ router.use(authenticateToken);
 
 router.get("/", listInquiriesHandler);
 router.post("/", createInquiryHandler);
-router.put("/status/:id", updateInquiryStatusHandler);
+router.patch("/:id/status", updateInquiryStatusHandler);
 
 export default router;
