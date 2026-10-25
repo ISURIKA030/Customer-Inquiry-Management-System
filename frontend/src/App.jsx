@@ -8,6 +8,10 @@ function App() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [loggedIn, setLoggedIn] = useState(
+    Boolean(sessionStorage.getItem("token"))
+  );
+
   async function handleLogin(event) {
     event.preventDefault();
     setError("");
@@ -34,12 +38,49 @@ function App() {
       sessionStorage.setItem("token", data.token);
       sessionStorage.setItem("staff", JSON.stringify(data.staff));
 
-      alert(`Welcome, ${data.staff.fullName}!`);
+      setLoggedIn(true);
     } catch (err) {
       setError(err.message || "Unable to connect to the server.");
     } finally {
       setLoading(false);
     }
+  }
+
+  function handleLogout() {
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("staff");
+    setLoggedIn(false);
+    setEmail("");
+    setPassword("");
+    setError("");
+  }
+
+  if (loggedIn) {
+    const staff = JSON.parse(
+      sessionStorage.getItem("staff") || "{}"
+    );
+
+    return (
+      <main className="login-page">
+        <section className="login-card">
+          <div className="brand-icon">CN</div>
+          <p className="eyebrow">COFFEE NINJA</p>
+          <h1>Customer Inquiries</h1>
+          <p className="subtitle">
+            Welcome, {staff.fullName || "Staff"}!
+          </p>
+
+          <p>
+            You have successfully signed in to the Customer Inquiry
+            Management System.
+          </p>
+
+          <button type="button" onClick={handleLogout}>
+            Sign Out
+          </button>
+        </section>
+      </main>
+    );
   }
 
   return (

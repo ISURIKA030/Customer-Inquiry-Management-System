@@ -1,17 +1,27 @@
 
-import express from "express";
-import pool from "./db.js";
 import "dotenv/config";
+import express from "express";
+import cors from "cors";
+import pool from "./db.js";
 import auth_routes from "./routes/auth_routes.js";
 import inquiryRoutes from "./routes/inquiry_routes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware must run before the routes
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  })
+);
 app.use(express.json());
-app.use("/api/inquiries", inquiryRoutes);
-app.use("/api/auth", auth_routes);
 
+// API routes
+app.use("/api/auth", auth_routes);
+app.use("/api/inquiries", inquiryRoutes);
+
+// Health check
 app.get("/api/health", (req, res) => {
   res.json({
     status: "OK",
@@ -19,6 +29,7 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+// Database check
 app.get("/api/db-check", async (req, res) => {
   try {
     const result = await pool.query(
@@ -31,7 +42,7 @@ app.get("/api/db-check", async (req, res) => {
       database: result.rows[0].database,
     });
   } catch (error) {
-    console.error("Database connection failed:", error);
+    console.error("Database connection failed:", error.message);
 
     res.status(500).json({
       status: "ERROR",
